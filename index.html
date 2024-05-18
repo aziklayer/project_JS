@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link 
+        rel="stylesheet" 
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+    <style>
+        body{
+            background: url('./stw.jpg') no-repeat center/cover;
+            height: 100%;
+            background-attachment: fixed;
+        }
+    </style>
+    <title>Starwars API</title>
+</head>
+
+<body class="container">
+
+    <header class="text-center pt-5">
+        <p>Starwars API</p>
+
+    </header>
+
+    <div id="button" class="text-center mb-5">
+        <div class="btn-group btn-group-toggle pt-5" data-toggle="button">
+            <label class="btn btn-lg btn-outline-light">
+                <input type="radio" name="options" id="films" value="films" autocomplete="off">Фильмы
+            </label>
+            <label class="btn btn-lg btn-outline-light">
+                <input type="radio" name="options" id="people" value="people" autocomplete="off">Люди
+            </label>
+            <label class="btn btn-lg btn-outline-light">
+                <input type="radio" name="options" id="vehicles" value="vehicles" autocomplete="off">Транспортные средства
+            </label>
+        </div>
+    </div>
+
+    <div id="results" class="card-colums"></div>
+
+    <script>
+        const results = document.querySelector("#results");
+
+    async function asyncFetch(value) {
+        console.log(value
+        )
+        const res = await fetch(`https://swapi.dev/api/${value}/`);
+        const data = await res.json();
+        displayResults(data, value);
+    }
+
+    function displayResults(data, value) {
+        let output = "";
+        // console.log(data);
+        if (value === 'films') {
+            data.results.forEach(item => {
+                    output += `
+                    <div class="card p-3 m-3" style="opacity:.8">
+                        <h4 class="card-title text-center">${item.title}</h4> 
+                        <div class="card-content">
+                            <span style="text-decoration:underline">Эпизод</span>: ${item.episode_id}<br> 
+
+                            <span style="text-decoration:underline">Продюсер</span>: ${item.producer}<br> 
+                            <span style="text-decoration:underline">Режиссер</span>: ${item.director}<br> 
+                            <span style="text-decoration:underline">Дата выпуска</span>: ${item.release_date}<br> 
+                            <p class=""text-center>${item.opening_crawl}</p>
+                        </div>
+                    </div>
+                    `                     
+            })
+        }
+        if (value === 'people') {
+            data.results.forEach(item => {
+                    output += `
+                    <div class="card p-3 m-3" style="opacity:.8">
+                        <h4 class="card-title text-center">${item.name}</h4> 
+                        <div class="card-content">
+                            <span style="text-decoration:underline">Рост</span>: ${item.height}<br> 
+                            <span style="text-decoration:underline">Год рождения</span>: ${item.birth_year}<br> 
+                            <span style="text-decoration:underline">Цвет кожи</span>: ${item.skin_color}<br> 
+                        </div>
+                    </div>
+                    `                     
+            })
+        }
+        if (value === 'vehicles') {
+            data.results.forEach(item => {
+                    output += `
+                    <div class="card p-3 m-3" style="opacity:.8">
+                        <h4 class="card-title text-center">${item.name}</h4> 
+                        <div class="card-content">
+                            <span style="text-decoration:underline">Грузоподъёмность</span>: ${item.capacity} кг<br> 
+                            <span style="text-decoration:underline">Модель</span>: ${item.model}<br> 
+                            <span style="text-decoration:underline">Производитель</span>: ${item.manufacturer}<br> 
+                            <span style="text-decoration:underline">Класс транспортного средства</span>: ${item.vechicle_class}<br> 
+                        </div>
+                    </div>
+                    `                     
+            })
+        }
+        results.innerHTML = output;
+    }
+
+
+    document.querySelector("#films").addEventListener("click", e => {
+        asyncFetch(e.target.value);
+    });
+
+    document.querySelector("#people").addEventListener("click", e => {
+        asyncFetch(e.target.value);
+    });
+
+    document.querySelector("#vehicles").addEventListener("click", e => {
+        asyncFetch(e.target.value);
+    });
+
+    </script>
+</body>
+
+</html>
